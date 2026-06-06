@@ -25,6 +25,13 @@ Written in C for gedit 49+ which [no longer supports Python plugins](https://ged
   using multiple windows simultaneously may cause sessions to overwrite each other
   or restore duplicate tabs.
 
+- On some systems (e.g. GNOME Shell on Wayland), enabling this plugin may stop the
+  dash from showing the running indicator dot for gedit. This is triggered by the
+  plugin restoring tabs and closing the initial empty tab at startup, which can
+  break GNOME Shell's window-to-application association. Workaround: copy
+  `/usr/share/applications/org.gnome.gedit.desktop` to `~/.local/share/applications/`
+  and add `StartupWMClass=gedit`.
+
 ## Build
 
 Requires `gedit-devel` and `meson`:

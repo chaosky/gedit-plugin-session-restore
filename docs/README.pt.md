@@ -19,6 +19,8 @@ Escrito em C para o gedit 49+, que [não oferece mais suporte a plugins em Pytho
 
 - Projetado para uso com uma única janela. Todas as janelas compartilham o mesmo `session.txt`, então usar várias janelas simultaneamente pode fazer com que as sessões se sobrescrevam ou que abas duplicadas sejam restauradas.
 
+- Em alguns ambientes (por exemplo, GNOME Shell no Wayland), ativar este plugin pode fazer com que o dash deixe de exibir o ponto indicador de execução do gedit. Isso é causado pelo plugin restaurar as abas e fechar a aba vazia inicial na inicialização, o que pode quebrar a associação janela-aplicativo do GNOME Shell. Solução alternativa: copie `/usr/share/applications/org.gnome.gedit.desktop` para `~/.local/share/applications/` e adicione `StartupWMClass=gedit`.
+
 ## Compilação
 
 Requer `gedit-devel` e `meson`:

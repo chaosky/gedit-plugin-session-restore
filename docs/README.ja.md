@@ -19,6 +19,8 @@ Python プラグインに[対応しなくなった](https://gedit-text-editor.or
 
 - 単一ウィンドウでの使用を想定しています。すべてのウィンドウが同じ `session.txt` を共有するため、複数のウィンドウを同時に使用すると、セッションが互いに上書きされたり、タブが重複して復元されたりする可能性があります。
 
+- 一部の環境（例: Wayland 上の GNOME Shell）では、このプラグインを有効にすると、dash で gedit の実行中インジケーター（ドット）が表示されなくなることがあります。起動時にプラグインがタブを復元し、初期の空タブを閉じることで、GNOME Shell のウィンドウとアプリケーションの関連付けが壊れるために発生します。回避策: `/usr/share/applications/org.gnome.gedit.desktop` を `~/.local/share/applications/` にコピーし、`StartupWMClass=gedit` を追加します。
+
 ## ビルド
 
 `gedit-devel` と `meson` が必要です:

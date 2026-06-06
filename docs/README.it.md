@@ -19,6 +19,8 @@ Scritto in C per gedit 49+, che [non supporta più i plugin Python](https://gedi
 
 - Progettato per l'uso con una singola finestra. Tutte le finestre condividono lo stesso `session.txt`, quindi l'uso di più finestre contemporaneamente può causare la sovrascrittura reciproca delle sessioni o il ripristino di schede duplicate.
 
+- Su alcuni ambienti (ad esempio GNOME Shell su Wayland), l'attivazione di questo plugin può impedire al dash di mostrare il punto indicatore di esecuzione per gedit. È causato dal plugin che ripristina le schede e chiude la scheda vuota iniziale all'avvio, il che può interrompere l'associazione finestra-applicazione di GNOME Shell. Soluzione alternativa: copia `/usr/share/applications/org.gnome.gedit.desktop` in `~/.local/share/applications/` e aggiungi `StartupWMClass=gedit`.
+
 ## Compilazione
 
 Richiede `gedit-devel` e `meson`:

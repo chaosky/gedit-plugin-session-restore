@@ -19,6 +19,8 @@
 
 - 为单窗口使用设计。所有窗口共享同一个 `session.txt`，因此同时使用多个窗口可能导致会话互相覆盖或恢复重复的标签页。
 
+- 在某些环境下（例如 Wayland 上的 GNOME Shell），启用此插件后 dash 可能不再为 gedit 显示运行指示点。这是由于插件在启动时恢复标签页并关闭初始空标签页，破坏了 GNOME Shell 的窗口与应用关联导致的。解决方法：将 `/usr/share/applications/org.gnome.gedit.desktop` 复制到 `~/.local/share/applications/` 并添加 `StartupWMClass=gedit`。
+
 ## 构建
 
 需要 `gedit-devel` 和 `meson`：

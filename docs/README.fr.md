@@ -19,6 +19,8 @@ Un plugin gedit qui mémorise vos fichiers ouverts et les restaure au prochain d
 
 - Conçu pour une utilisation avec une seule fenêtre. Toutes les fenêtres partagent le même `session.txt`, donc l'utilisation simultanée de plusieurs fenêtres peut entraîner l'écrasement mutuel des sessions ou la restauration d'onglets en double.
 
+- Sur certains environnements (par exemple GNOME Shell sous Wayland), l'activation de ce plugin peut empêcher le dash d'afficher le point indicateur d'exécution pour gedit. Cela est déclenché par la restauration des onglets et la fermeture de l'onglet vide initial au démarrage, ce qui peut rompre l'association fenêtre-application de GNOME Shell. Solution de contournement : copiez `/usr/share/applications/org.gnome.gedit.desktop` dans `~/.local/share/applications/` et ajoutez `StartupWMClass=gedit`.
+
 ## Compilation
 
 Nécessite `gedit-devel` et `meson` :

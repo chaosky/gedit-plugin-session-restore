@@ -19,6 +19,8 @@
 
 - 단일 창 사용을 위해 설계되었습니다. 모든 창이 동일한 `session.txt`를 공유하므로 여러 창을 동시에 사용하면 세션이 서로 덮어쓰이거나 중복된 탭이 복원될 수 있습니다.
 
+- 일부 환경(예: Wayland의 GNOME Shell)에서는 이 플러그인을 활성화하면 dash에서 gedit의 실행 표시 점이 더 이상 표시되지 않을 수 있습니다. 시작 시 플러그인이 탭을 복원하고 초기 빈 탭을 닫으면서 GNOME Shell의 창-애플리케이션 연결이 끊어지기 때문입니다. 해결 방법: `/usr/share/applications/org.gnome.gedit.desktop`을 `~/.local/share/applications/`에 복사하고 `StartupWMClass=gedit`를 추가하세요.
+
 ## 빌드
 
 `gedit-devel`과 `meson`이 필요합니다:

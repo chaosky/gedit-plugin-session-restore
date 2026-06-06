@@ -19,6 +19,8 @@ Escrito en C para gedit 49+, que [ya no admite complementos de Python](https://g
 
 - Diseñado para uso con una sola ventana. Todas las ventanas comparten el mismo `session.txt`, por lo que usar varias ventanas simultáneamente puede provocar que las sesiones se sobrescriban entre sí o que se restauren pestañas duplicadas.
 
+- En algunos entornos (por ejemplo, GNOME Shell en Wayland), activar este complemento puede hacer que el dash deje de mostrar el punto indicador de ejecución de gedit. Se debe a que el complemento restaura las pestañas y cierra la pestaña vacía inicial al inicio, lo que puede romper la asociación ventana-aplicación de GNOME Shell. Solución alternativa: copia `/usr/share/applications/org.gnome.gedit.desktop` en `~/.local/share/applications/` y añade `StartupWMClass=gedit`.
+
 ## Compilación
 
 Requiere `gedit-devel` y `meson`:
