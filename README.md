@@ -9,6 +9,20 @@ Written in C for gedit 49+ which [no longer supports Python plugins](https://ged
 - On window close: saves all open file URIs to `~/.local/share/gedit/session.txt`
 - On window open: restores files as tabs (skips files that no longer exist)
 
+## Known Behavior
+
+- On startup, gedit always creates an empty untitled tab before plugins run. After
+  the session files are restored, this empty tab is closed automatically, so you may
+  briefly see it appear and then disappear.
+
+- The session file is only updated when at least one saved file is open. If you
+  manually close all files (leaving only an empty document), the session is not
+  cleared, so those files will be restored again on next startup.
+
+- Designed for single-window use. All windows share the same `session.txt`, so
+  using multiple windows simultaneously may cause sessions to overwrite each other
+  or restore duplicate tabs.
+
 ## Build
 
 Requires `gedit-devel` and `meson`:
