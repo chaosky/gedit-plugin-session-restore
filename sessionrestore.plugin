@@ -1,0 +1,8 @@
+[Plugin]
+Module=sessionrestore
+IAge=3
+Name=Session Restore
+Description=Remembers open files and restores them on next startup.
+Authors=chaosky
+Copyright=Copyright © 2026 chaosky
+Website=https://github.com/chaosky
