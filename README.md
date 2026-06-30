@@ -54,6 +54,34 @@ cp builddir/libsessionrestore.so sessionrestore.plugin ~/.local/share/gedit/plug
 
 Then enable "Session Restore" in gedit → Preferences → Plugins.
 
+## Troubleshooting
+
+### `libgedit-49.so: cannot open shared object file: No such file or directory`
+
+If the plugin stops loading after a gedit upgrade and you see something like:
+
+```
+Failed to load module 'sessionrestore': libgedit-49.so: cannot open shared object file: No such file or directory
+Error loading plugin 'sessionrestore'
+```
+
+this is **expected after a gedit major-version upgrade**. The compiled `.so` is
+linked against the exact `libgedit-<N>.so` that was installed when you built it
+(e.g. `libgedit-49.so` for gedit 49). When gedit is upgraded (e.g. to 50), the
+old library is removed, so the plugin can no longer find it.
+
+**Fix: just rebuild against the new gedit and reinstall.**
+
+```bash
+rm -rf builddir
+meson setup builddir
+meson compile -C builddir
+cp builddir/libsessionrestore.so ~/.local/share/gedit/plugins/session-restore/
+```
+
+Then restart gedit. You need to do this once after every gedit major-version
+upgrade.
+
 ## License
 
 MIT

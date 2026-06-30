@@ -43,6 +43,30 @@ cp builddir/libsessionrestore.so sessionrestore.plugin ~/.local/share/gedit/plug
 
 Затем включите «Session Restore» в gedit → Параметры → Модули.
 
+## Устранение неполадок
+
+### `libgedit-49.so: cannot open shared object file: No such file or directory`
+
+Если после обновления gedit плагин перестал загружаться и вы видите примерно следующее:
+
+```
+Failed to load module 'sessionrestore': libgedit-49.so: cannot open shared object file: No such file or directory
+Error loading plugin 'sessionrestore'
+```
+
+это **ожидаемо после обновления мажорной версии gedit**. Скомпилированный `.so` слинкован с тем конкретным `libgedit-<N>.so`, который был установлен на момент сборки (например, `libgedit-49.so` для gedit 49). При обновлении gedit (например, до 50) старая библиотека удаляется, и плагин больше не может её найти.
+
+**Решение: просто пересоберите под новый gedit и переустановите.**
+
+```bash
+rm -rf builddir
+meson setup builddir
+meson compile -C builddir
+cp builddir/libsessionrestore.so ~/.local/share/gedit/plugins/session-restore/
+```
+
+Затем перезапустите gedit. Это нужно делать один раз после каждого обновления мажорной версии gedit.
+
 ## Лицензия
 
 MIT

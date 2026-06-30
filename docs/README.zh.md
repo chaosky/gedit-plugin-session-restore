@@ -43,6 +43,30 @@ cp builddir/libsessionrestore.so sessionrestore.plugin ~/.local/share/gedit/plug
 
 然后在 gedit → 首选项 → 插件 中启用 "Session Restore"。
 
+## 故障排查
+
+### `libgedit-49.so: cannot open shared object file: No such file or directory`
+
+如果 gedit 升级后插件无法加载，并看到类似信息：
+
+```
+Failed to load module 'sessionrestore': libgedit-49.so: cannot open shared object file: No such file or directory
+Error loading plugin 'sessionrestore'
+```
+
+这是 **gedit 大版本升级后的预期现象**。编译出的 `.so` 链接的是构建时所安装的那个具体 `libgedit-<N>.so`（例如 gedit 49 对应 `libgedit-49.so`）。当 gedit 升级（例如升到 50）后，旧库被删除，插件就找不到它了。
+
+**解决办法：重新针对新版 gedit 编译并重装即可。**
+
+```bash
+rm -rf builddir
+meson setup builddir
+meson compile -C builddir
+cp builddir/libsessionrestore.so ~/.local/share/gedit/plugins/session-restore/
+```
+
+然后重启 gedit。每次 gedit 大版本升级后做一次即可。
+
 ## 许可证
 
 MIT

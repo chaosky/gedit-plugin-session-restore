@@ -157,18 +157,31 @@ cleanup_idle_cb (gpointer user_data)
 
 	if (g_list_length (documents) > 1)
 	{
+		GeditTab *empty_tab = NULL;
+		GeditTab *keep_tab = NULL;
+
 		for (GList *l = documents; l != NULL; l = l->next)
 		{
 			GeditDocument *doc = GEDIT_DOCUMENT (l->data);
 			GtkTextBuffer *buf = GTK_TEXT_BUFFER (doc);
 
-			if (gtk_source_file_get_location (gedit_document_get_file (doc)) == NULL &&
+			if (empty_tab == NULL &&
+			    gtk_source_file_get_location (gedit_document_get_file (doc)) == NULL &&
 			    gtk_text_buffer_get_char_count (buf) == 0 &&
 			    !gtk_text_buffer_get_modified (buf))
-			{
-				gedit_window_close_tab (self->window, gedit_tab_get_from_document (doc));
-				break;
-			}
+				empty_tab = gedit_tab_get_from_document (doc);
+			else if (keep_tab == NULL)
+				keep_tab = gedit_tab_get_from_document (doc);
+		}
+
+		if (empty_tab != NULL && keep_tab != NULL)
+		{
+			/* Switch away from the empty tab before closing it. Closing the
+			 * active tab makes gedit core query the (already invalid) buffer
+			 * during the active-tab transition, which emits a GTK_IS_TEXT_BUFFER
+			 * assertion. Activating a surviving tab first avoids that. */
+			gedit_window_set_active_tab (self->window, keep_tab);
+			gedit_window_close_tab (self->window, empty_tab);
 		}
 	}
 
@@ -177,13 +190,28 @@ cleanup_idle_cb (gpointer user_data)
 	return G_SOURCE_REMOVE;
 }
 
+/* Run the restore from an idle so gedit's initial empty untitled tab already
+ * exists: gedit then reuses that tab for the first loaded file instead of
+ * leaving a spare empty tab we'd have to close. Avoiding the close also avoids
+ * a crash-prone race with the quick-highlight plugin's pending idle worker. */
+static gboolean
+restore_idle_cb (gpointer user_data)
+{
+	SessionRestoreWindowActivatable *self = user_data;
+
+	self->cleanup_idle_id = 0;
+	if (restore_session (self))
+		self->cleanup_idle_id = g_idle_add (cleanup_idle_cb, self);
+
+	return G_SOURCE_REMOVE;
+}
+
 static void
 session_restore_window_activate (GeditWindowActivatable *activatable)
 {
 	SessionRestoreWindowActivatable *self = SESSION_RESTORE_WINDOW_ACTIVATABLE (activatable);
 
-	if (restore_session (self))
-		self->cleanup_idle_id = g_idle_add (cleanup_idle_cb, self);
+	self->cleanup_idle_id = g_idle_add (restore_idle_cb, self);
 
 	self->tab_added_id = g_signal_connect (self->window, "tab-added",
 	                                       G_CALLBACK (on_tab_added), self);
